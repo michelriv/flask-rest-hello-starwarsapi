@@ -45,6 +45,52 @@ def handle_hello():
 
     return jsonify(response_body), 200
 
+@app.route('?user', methods=['GET'])
+def get_users():
+    users = User.query.all()
+    user_list = [element.serialize() for element in users]
+
+    return jsonify(user_list),200
+
+@app.route('/user/<int:user_id>/favorites', methods=['GET'])
+def get_user_favorites(user_id):
+    user = User.query.get(user_id)
+    if user is None:
+        return 'User noy found', 404
+    favorites = [favorite.serialize() for favorite in user.favorites]
+    return jsonify(favorites), 200
+
+@app.route('/planet', methods=['GET'])
+def get_planets():
+    allPlanets = Planet.query.all()
+    result = [element.serialize() for element in allPlanets]
+    return jsonify(result), 200
+
+@app.route('/planet/int:planet_id', methods=['GET'])
+def get_one_planet(planet_id):
+    onePlanet = Planet.query.get(planet_id)
+    if onePlanet is None:
+        return 'Planet not found', 404
+    return jsonify(onePlanet.serialize()), 200
+
+@app.route('/people', methods=['GET'])
+def get_people():
+    allPeople = People.query.all()
+    result = [element.serialize() for element in allPeople]
+    return jsonify(result), 200
+
+@app.route('/people/<int:people_id>', methods=['GET'])
+def get_one_people(people_id):
+    onePeople = People.query.get(people_id)
+    if onePeople is None:
+        return 'People not found', 404
+    return jsonify(onePeople.serialize()), 200
+
+
+
+
+
+
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
